@@ -1,12 +1,14 @@
 import express from 'express';
 import sequelize from './db-config/mysql';
+import router from './routes';
 
 const app = express();
 const port = 8080;
+// Middleware to parse request body as JSON
+app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('Hello, Deliveroo-backend!');
-});
+// Register the routes
+app.use('/', router);
 
 // Test endpoint for checking MySQL connection
 app.get('/test-connection', async (req, res) => {
