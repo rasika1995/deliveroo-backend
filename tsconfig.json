@@ -9,10 +9,6 @@
     "sourceMap": true,
     "types": ["node", "mysql"]
   },
-  "include": [
-    "src/**/*.ts"
-, "src/seed.ts"  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
 }
