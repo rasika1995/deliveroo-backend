@@ -3,7 +3,7 @@ import * as restaurantController from './controllers/restaurant.controller';
 import * as dishCategoryController from './controllers/dish-category.controller';
 import * as dishController from './controllers/dish.controller';
 import * as dishRatingController from './controllers/dish-rating.controller';
-import { placeOrder } from './controllers/order.controller';
+import * as orderController from './controllers/order.controller';
 
 const router = express.Router();
 
@@ -59,6 +59,10 @@ router.post('/dish-ratings', dishRatingController.createDishRating);
 router.put('/dish-ratings/:id', dishRatingController.updateDishRating);
 router.delete('/dish-ratings/:id', dishRatingController.deleteDishRating);
 
-router.post('/restaurants/:restaurantId/orders', placeOrder);
+// routes to create, view, manage and change the status of orders
+router.post('/restaurants/:restaurantId/orders', orderController.createOrder);
+router.get('/orders/:id', orderController.getOrderById);
+router.put('/orders/:id', orderController.updateOrder);
+router.put('/orders/:id/status', orderController.updateOrderStatus);
 
 export default router;

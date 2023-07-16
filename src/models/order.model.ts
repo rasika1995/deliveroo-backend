@@ -34,7 +34,7 @@ Orders.init(
       },
     },
     status: {
-      type: DataTypes.ENUM('pending', 'confirmed', 'delivered'),
+      type: DataTypes.ENUM('pending', 'confirmed', 'delivered', 'cancled'),
       defaultValue: 'pending',
     },
     customer_name: {
@@ -53,5 +53,11 @@ Orders.init(
     underscored: true,
   },
 );
+
+Orders.hasMany(OrderItem, {
+  sourceKey: 'id',
+  foreignKey: 'order_id',
+  as: 'orderItems',
+});
 
 export default Orders;

@@ -55,7 +55,7 @@ CREATE TABLE Orders (
   restaurant_id INT NOT NULL,
   customer_name VARCHAR(255) NOT NULL,
   customer_email VARCHAR(255) NOT NULL,
-  status ENUM('pending', 'confirmed', 'delivered') DEFAULT 'pending',
+  status ENUM('pending', 'confirmed', 'delivered', 'cancled') DEFAULT 'pending',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (restaurant_id) REFERENCES Restaurant(id)
