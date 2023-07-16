@@ -1,18 +1,18 @@
-import { Model, DataTypes } from 'sequelize'
-import sequelize from '../db-config/mysql'
+import { Model, DataTypes } from 'sequelize';
+import sequelize from '../db-config/mysql';
 
 export class Restaurant extends Model {
-  public id!: number
-  public name!: string
-  public description!: string | null
-  public address!: string
-  public city!: string
-  public state!: string
-  public postal_code!: string
-  public phone!: string
-  public website!: string | null
-  public readonly created_at!: Date
-  public readonly updated_at!: Date
+  public id!: number;
+  public name!: string;
+  public description!: string | null;
+  public address!: string;
+  public city!: string;
+  public state!: string;
+  public postal_code!: string;
+  public phone!: string;
+  public website!: string | null;
+  public readonly created_at!: Date;
+  public readonly updated_at!: Date;
 }
 
 Restaurant.init(
@@ -61,6 +61,6 @@ Restaurant.init(
     timestamps: true,
     underscored: true,
   },
-)
+);
 
-export default Restaurant
+export default Restaurant;

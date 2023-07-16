@@ -1,6 +1,6 @@
-const faker = require('faker')
+const faker = require('faker');
 
-import Restaurant from './models/restaurant.model' // Import your Sequelize models
+import Restaurant from './models/restaurant.model'; // Import your Sequelize models
 
 // Seed Restaurants
 const seedRestaurants = async (): Promise<void> => {
@@ -15,13 +15,13 @@ const seedRestaurants = async (): Promise<void> => {
         postal_code: faker.address.zipCode(),
         phone: faker.phone.number(),
         website: faker.internet.url(),
-      })
+      });
     }
-    console.log('Restaurants seeded successfully!')
+    console.log('Restaurants seeded successfully!');
   } catch (error) {
-    console.error('Error seeding restaurants:', error)
+    console.error('Error seeding restaurants:', error);
   }
-}
+};
 
 // Call the seed functions
-seedRestaurants()
+seedRestaurants();

@@ -1,13 +1,13 @@
-import { Model, DataTypes } from 'sequelize'
-import sequelize from '../db-config/mysql'
-import Restaurant from './restaurant.model'
+import { Model, DataTypes } from 'sequelize';
+import sequelize from '../db-config/mysql';
+import Restaurant from './restaurant.model';
 
 class DishCategory extends Model {
-  public id!: number
-  public name!: string
-  public restaurantId!: number
-  public readonly createdAt!: Date
-  public readonly updatedAt!: Date
+  public id!: number;
+  public name!: string;
+  public restaurant_id!: number;
+  public readonly created_at!: Date;
+  public readonly updated_at!: Date;
 }
 
 DishCategory.init(
@@ -21,7 +21,7 @@ DishCategory.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    restaurantId: {
+    restaurant_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -36,6 +36,6 @@ DishCategory.init(
     timestamps: true,
     underscored: true,
   },
-)
+);
 
-export default DishCategory
+export default DishCategory;
