@@ -3,6 +3,8 @@ import DishRating from '../models/dish-rating.model';
 import * as dishRatingService from '../services/dish-rating.service';
 import { PaginationOptions } from '../types/pagination-options';
 import { validateRequest } from '../common-utils/schema-validation';
+import { sendError } from '../common-utils/send-error';
+import { sendResponse } from '../common-utils/send-response';
 
 const createDishRatingSchema = {
   type: 'object',
@@ -34,10 +36,10 @@ export async function getAllDishRatingsForDish(req: Request, res: Response) {
       Number(dishId),
       paginationOptions,
     );
-    res.json(dishRatings);
+    sendResponse(res, 200, 'Dish ratings retrived successfully', dishRatings);
   } catch (error) {
     console.error('Error getting dish ratings for dish:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    sendError(res, 500);
   }
 }
 
@@ -45,16 +47,13 @@ export async function getDishRatingById(req: Request, res: Response) {
   try {
     const { id } = req.params;
     const dishRating = await dishRatingService.getDishRatingById(Number(id));
-
     if (!dishRating) {
-      res.status(404).json({ error: 'Dish rating not found' });
-      return;
+      return sendError(res, 404, 'Dish rating not found');
     }
-
-    res.json(dishRating);
+    sendResponse(res, 200, 'Dish rating retrived successfully', dishRating);
   } catch (error) {
     console.error('Error getting dish rating:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    sendError(res, 500);
   }
 }
 
@@ -64,14 +63,13 @@ export async function createDishRating(req: Request, res: Response) {
     const validationErrors = validateRequest(createDishRatingSchema, req.body);
     if (validationErrors) {
       console.log(validationErrors);
-      return res.status(400).json({ errors: validationErrors });
+      return sendError(res, 400, JSON.stringify(validationErrors));
     }
-    const dishRatingData = req.body;
-    const dishRating = await dishRatingService.createDishRating(dishRatingData);
-    res.status(201).json(dishRating);
+    const dishRating = await dishRatingService.createDishRating(req.body);
+    sendResponse(res, 201, 'Dish rating created successfully', dishRating);
   } catch (error) {
     console.error('Error creating dish rating:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    sendError(res, 500);
   }
 }
 
@@ -81,22 +79,25 @@ export async function updateDishRating(req: Request, res: Response) {
     const validationErrors = validateRequest(updateDishRatingSchema, req.body);
     if (validationErrors) {
       console.log(validationErrors);
-      return res.status(400).json({ errors: validationErrors });
+      return sendError(res, 400, JSON.stringify(validationErrors));
     }
     const { id } = req.params;
-    const dishRatingData = req.body;
     const updatedDishRating = await dishRatingService.updateDishRating(
       Number(id),
-      dishRatingData,
+      req.body,
     );
     if (!updatedDishRating) {
-      res.status(404).json({ error: 'Dish rating not found' });
-      return;
+      return sendError(res, 404, 'Dish rating not found');
     }
-    res.json(updatedDishRating);
+    sendResponse(
+      res,
+      200,
+      'Dish rating updated successfully',
+      updatedDishRating,
+    );
   } catch (error) {
     console.error('Error updating dish rating:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    sendError(res, 500);
   }
 }
 
@@ -107,9 +108,9 @@ export async function deleteDishRating(
   try {
     const { id } = req.params;
     await dishRatingService.deleteDishRating(Number(id));
-    res.status(204).json({ message: 'Dish rating deleted' });
+    sendResponse(res, 204, 'Dish rating deleted');
   } catch (error) {
     console.error('Error deleting dish rating:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    sendError(res, 500);
   }
 }

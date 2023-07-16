@@ -53,7 +53,7 @@ export async function updateRestaurant(
   try {
     const restaurant = await Restaurant.findByPk(id);
     if (!restaurant) {
-      throw new Error('Restaurant not found');
+      return null;
     }
     await restaurant.update(restaurantData);
     return restaurant;
@@ -65,11 +65,9 @@ export async function updateRestaurant(
 
 export async function deleteRestaurant(id: number): Promise<void> {
   try {
-    const rowsDeleted = await Restaurant.destroy({
-      where: { id },
-    });
-    if (rowsDeleted === 0) {
-      throw new Error('Restaurant not found');
+    const dish = await Restaurant.findByPk(id);
+    if (dish) {
+      await dish.destroy();
     }
   } catch (error) {
     console.error('Error deleting restaurant:', error);

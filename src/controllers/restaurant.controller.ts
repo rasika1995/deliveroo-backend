@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import * as restaurantService from '../services/restaurant.service';
 import Restaurant from '../models/restaurant.model';
 import { validateRequest } from '../common-utils/schema-validation';
+import { sendError } from '../common-utils/send-error';
+import { sendResponse } from '../common-utils/send-response';
 
 const createRestaurantSchema = {
   type: 'object',
@@ -42,7 +44,7 @@ export async function getAllRestaurants(req: Request, res: Response) {
     res.json(restaurants);
   } catch (error) {
     console.error('Error fetching restaurants:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    sendError(res, 500);
   }
 }
 
@@ -51,16 +53,17 @@ export async function createRestaurant(req: Request, res: Response) {
     const validationErrors = validateRequest(createRestaurantSchema, req.body);
     if (validationErrors) {
       console.log(validationErrors);
-      return res.status(400).json({ errors: validationErrors });
+      return sendError(res, 400, JSON.stringify(validationErrors));
     }
     const restaurantData = new Restaurant(req.body);
     const restaurant = await restaurantService.createRestaurant(
       restaurantData.dataValues,
     );
+    sendResponse(res, 201, "Restaurant created successfully", restaurant)
     res.status(201).json(restaurant);
   } catch (error) {
     console.error('Error creating restaurant:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    sendError(res, 500);
   }
 }
 
@@ -70,21 +73,20 @@ export async function updateRestaurant(req: Request, res: Response) {
     const validationErrors = validateRequest(updateRestaurantSchema, req.body);
     if (validationErrors) {
       console.log(validationErrors);
-      return res.status(400).json({ errors: validationErrors });
+      return sendError(res, 400, JSON.stringify(validationErrors));
     }
     const restaurantData = new Restaurant(req.body);
-    await restaurantService.updateRestaurant(
+    const updatedRestaurant = await restaurantService.updateRestaurant(
       Number(id),
       restaurantData.dataValues,
     );
-    res.json({ message: 'Restaurant updated successfully' });
-  } catch (error: any) {
-    console.error('Error updating restaurant:', error);
-    if (error.message === 'Restaurant not found') {
-      res.status(404).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: 'Internal server error' });
+    if(!updatedRestaurant){
+      return sendError(res, 404, "Restaurant not found")
     }
+    sendResponse(res, 200, "Restaurant updated successfully", updatedRestaurant)
+  } catch (error) {
+    console.error('Error updating restaurant:', error);
+  sendError(res, 500);  
   }
 }
 
@@ -95,13 +97,9 @@ export async function deleteRestaurant(
   try {
     const { id } = req.params;
     await restaurantService.deleteRestaurant(Number(id));
-    res.status(204).send({ message: 'Restaurant deleted successfully' });
+    sendResponse(res, 204, 'Restaurant deleted successfully')
   } catch (error: any) {
     console.error('Error deleting restaurant:', error);
-    if (error.message === 'Restaurant not found') {
-      res.status(404).json({ error: error.message });
-    } else {
-      res.status(500).json({ error: 'Internal server error' });
-    }
+    sendError(res, 500);
   }
 }

@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import * as dishService from '../services/dish.service';
 import { validateRequest } from '../common-utils/schema-validation';
 import { PaginationOptions } from '../types/pagination-options';
+import { sendError } from '../common-utils/send-error';
+import { sendResponse } from '../common-utils/send-response';
 
 const createDishSchema = {
   type: 'object',
@@ -32,34 +34,32 @@ export async function getDishesByCategoryAndRestaurant(
   res: Response,
 ) {
   try {
-    const categoryId = Number(req.params.categoryId);
-    const restaurantId = Number(req.params.restaurantId);
+    const { categoryId, restaurantId } = req.params;
     const paginationOptions: PaginationOptions = req.query;
 
     const dishes = await dishService.getDishesByCategoryAndRestaurant(
-      categoryId,
-      restaurantId,
+      Number(categoryId),
+      Number(restaurantId),
       paginationOptions,
     );
-    res.json(dishes);
+    sendResponse(res, 200, 'Dishes retrived successfully', dishes);
   } catch (error) {
     console.error('Error getting dishes:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    sendError(res, 500);
   }
 }
 
 export async function getDishById(req: Request, res: Response) {
   try {
-    const dishId = Number(req.params.id);
-    const dish = await dishService.getDishById(dishId);
+    const { id } = req.params;
+    const dish = await dishService.getDishById(Number(id));
     if (!dish) {
-      res.status(404).json({ message: 'Dish not found' });
-      return;
+      return sendError(res, 404, 'Dish not found');
     }
-    res.json(dish);
+    sendResponse(res, 200, 'Dish retrived successfully', dish);
   } catch (error) {
     console.error('Error getting dish:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    sendError(res, 500);
   }
 }
 
@@ -69,14 +69,13 @@ export async function createDish(req: Request, res: Response) {
     const validationErrors = validateRequest(createDishSchema, req.body);
     if (validationErrors) {
       console.log(validationErrors);
-      return res.status(400).json({ errors: validationErrors });
+      return sendError(res, 400, JSON.stringify(validationErrors));
     }
-    const dishData = req.body;
-    const dish = await dishService.createDish(dishData);
-    res.status(201).json(dish);
+    const dish = await dishService.createDish(req.body);
+    sendResponse(res, 201, 'Dish created successfully', dish);
   } catch (error) {
     console.error('Error creating dish:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    sendError(res, 500);
   }
 }
 
@@ -86,29 +85,27 @@ export async function updateDish(req: Request, res: Response) {
     const validationErrors = validateRequest(updateDishSchema, req.body);
     if (validationErrors) {
       console.log(validationErrors);
-      return res.status(400).json({ errors: validationErrors });
+      return sendError(res, 400, JSON.stringify(validationErrors));
     }
-    const dishId = Number(req.params.id);
-    const dishData = req.body;
-    const updatedDish = await dishService.updateDish(dishId, dishData);
+    const { id } = req.params;
+    const updatedDish = await dishService.updateDish(Number(id), req.body);
     if (!updatedDish) {
-      res.status(404).json({ message: 'Dish not found' });
-      return;
+      return sendError(res, 404, 'Dish not found');
     }
-    res.json(updatedDish);
+    sendResponse(res, 200, 'Dish updated successfully', updatedDish);
   } catch (error) {
     console.error('Error updating dish:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    sendError(res, 500);
   }
 }
 
 export async function deleteDish(req: Request, res: Response) {
   try {
-    const dishId = Number(req.params.id);
-    await dishService.deleteDish(dishId);
-    res.status(204).json({ message: 'Dish deleted' });
+    const { id } = req.params;
+    await dishService.deleteDish(Number(id));
+    sendResponse(res, 204, 'Dish deleted successfully');
   } catch (error) {
     console.error('Error deleting dish:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    sendError(res, 500);
   }
 }

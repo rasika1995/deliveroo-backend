@@ -7,7 +7,6 @@ export async function getDishCategoriesByResturant(
 ) {
   try {
     const { limit = 10, page = 1 } = options;
-
     const offset = (page - 1) * limit;
     return await DishCategory.findAndCountAll({
       where: { restaurantId },
@@ -37,7 +36,7 @@ export async function createDishCategory(restaurantId: number, name: string) {
   try {
     return DishCategory.create({
       name,
-      restaurantId,
+      restaurant_id: restaurantId,
     });
   } catch (error) {
     console.error('Error creating dish-category:', error);
@@ -56,9 +55,8 @@ export async function updateDishCategory(
     });
 
     if (!dishCategory) {
-      throw new Error('Dish category not found');
+      return null;
     }
-
     dishCategory.name = name;
     await dishCategory.save();
     return dishCategory;
@@ -73,12 +71,9 @@ export async function deleteDishCategory(restaurantId: number, id: number) {
     const dishCategory = await DishCategory.findOne({
       where: { restaurantId, id },
     });
-
-    if (!dishCategory) {
-      throw new Error('Dish category not found');
+    if (dishCategory) {
+      await dishCategory.destroy();
     }
-
-    await dishCategory.destroy();
   } catch (error) {
     console.error('Error deleting dish-category:', error);
     throw new Error('Internal server error');

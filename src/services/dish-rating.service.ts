@@ -28,7 +28,7 @@ export async function getDishRatingById(
     return await DishRating.findByPk(id);
   } catch (error) {
     console.error('Error getting dish rating:', error);
-    throw new Error('Internal server error');
+    throw new Error(`${error}`);
   }
 }
 
@@ -49,13 +49,11 @@ export async function updateDishRating(
 ): Promise<DishRating | null> {
   try {
     const dishRating = await DishRating.findByPk(id);
-
-    if (!dishRating) {
-      throw new Error('Dish-rating not found');
+    if (dishRating) {
+      await dishRating.update(dishRatingData);
+      return dishRating;
     }
-
-    await dishRating.update(dishRatingData);
-    return dishRating;
+    return null;
   } catch (error) {
     console.error('Error updating dish rating:', error);
     throw new Error('Internal server error');
@@ -65,12 +63,9 @@ export async function updateDishRating(
 export async function deleteDishRating(id: number): Promise<void> {
   try {
     const dishRating = await DishRating.findByPk(id);
-
-    if (!dishRating) {
-      throw new Error('Dish rating not found');
+    if (dishRating) {
+      await dishRating.destroy();
     }
-
-    await dishRating.destroy();
   } catch (error) {
     console.error('Error deleting dish rating:', error);
     throw new Error('Internal server error');

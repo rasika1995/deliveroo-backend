@@ -8,8 +8,8 @@ export async function getDishesByCategoryAndRestaurant(
 ) {
   try {
     const { limit = 10, page = 1 } = options;
-
     const offset = (page - 1) * limit;
+
     return Dish.findAll({
       where: {
         category_id: categoryId,
@@ -47,7 +47,7 @@ export async function updateDish(id: number, dishData: Partial<Dish>) {
   try {
     const dish = await Dish.findByPk(id);
     if (!dish) {
-      throw new Error('Dish not found');
+      return null;
     }
     await dish.update(dishData);
     return dish;
@@ -60,10 +60,9 @@ export async function updateDish(id: number, dishData: Partial<Dish>) {
 export async function deleteDish(id: number) {
   try {
     const dish = await Dish.findByPk(id);
-    if (!dish) {
-      throw new Error('Dish not found');
+    if (dish) {
+      await dish.destroy();
     }
-    await dish.destroy();
   } catch (error) {
     console.error('Error deleting dish:', error);
     throw new Error('Internal server error');
