@@ -48,3 +48,29 @@ CREATE TABLE DishRating (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (dish_id) REFERENCES Dish(id)
 );
+
+-- Create the Order table
+CREATE TABLE Orders (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  restaurant_id INT NOT NULL,
+  customer_name VARCHAR(255) NOT NULL,
+  customer_email VARCHAR(255) NOT NULL,
+  status ENUM('pending', 'confirmed', 'delivered') DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (restaurant_id) REFERENCES Restaurant(id)
+);
+
+-- Create the OrderItem table
+CREATE TABLE OrderItem (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  order_id INT NOT NULL,
+  dish_id INT NOT NULL,
+  quantity INT NOT NULL,
+  price DECIMAL(8,2) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (order_id) REFERENCES Orders(id),
+  FOREIGN KEY (dish_id) REFERENCES Dish(id)
+);
+

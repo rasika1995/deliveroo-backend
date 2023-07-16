@@ -27,7 +27,12 @@ export async function getDishCategoriesByResturant(
         parseInt(restaurantId, 10),
         paginationOptions,
       );
-    sendResponse(res, 200, 'Dish categories retrived successfully', dishCategories);
+    sendResponse(
+      res,
+      200,
+      'Dish categories retrived successfully',
+      dishCategories,
+    );
   } catch (error) {
     console.error('Error fetching dish categories:', error);
     sendError(res, 500);
@@ -42,7 +47,7 @@ export async function getDishCategoryById(req: Request, res: Response) {
       parseInt(id, 10),
     );
     if (!dishCategory) {
-      return sendError(res, 404, "Dish category not found");
+      return sendError(res, 404, 'Dish category not found');
     }
     sendResponse(res, 200, 'Dish category retrived successfully', dishCategory);
   } catch (error) {
@@ -93,7 +98,12 @@ export async function updateDishCategory(req: Request, res: Response) {
       parseInt(id, 10),
       name,
     );
-    sendResponse(res, 200, 'Dish category updated successfully', updatedDishCategory);
+    sendResponse(
+      res,
+      200,
+      'Dish category updated successfully',
+      updatedDishCategory,
+    );
   } catch (error) {
     console.error('Error updating dish category:', error);
     sendError(res, 500);

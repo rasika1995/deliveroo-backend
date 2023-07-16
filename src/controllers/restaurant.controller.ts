@@ -59,8 +59,7 @@ export async function createRestaurant(req: Request, res: Response) {
     const restaurant = await restaurantService.createRestaurant(
       restaurantData.dataValues,
     );
-    sendResponse(res, 201, "Restaurant created successfully", restaurant)
-    res.status(201).json(restaurant);
+    sendResponse(res, 201, 'Restaurant created successfully', restaurant);
   } catch (error) {
     console.error('Error creating restaurant:', error);
     sendError(res, 500);
@@ -80,13 +79,18 @@ export async function updateRestaurant(req: Request, res: Response) {
       Number(id),
       restaurantData.dataValues,
     );
-    if(!updatedRestaurant){
-      return sendError(res, 404, "Restaurant not found")
+    if (!updatedRestaurant) {
+      return sendError(res, 404, 'Restaurant not found');
     }
-    sendResponse(res, 200, "Restaurant updated successfully", updatedRestaurant)
+    sendResponse(
+      res,
+      200,
+      'Restaurant updated successfully',
+      updatedRestaurant,
+    );
   } catch (error) {
     console.error('Error updating restaurant:', error);
-  sendError(res, 500);  
+    sendError(res, 500);
   }
 }
 
@@ -97,7 +101,7 @@ export async function deleteRestaurant(
   try {
     const { id } = req.params;
     await restaurantService.deleteRestaurant(Number(id));
-    sendResponse(res, 204, 'Restaurant deleted successfully')
+    sendResponse(res, 204, 'Restaurant deleted successfully');
   } catch (error: any) {
     console.error('Error deleting restaurant:', error);
     sendError(res, 500);
