@@ -4,12 +4,19 @@ import * as dishCategoryController from './controllers/dish-category.controller'
 import * as dishController from './controllers/dish.controller';
 import * as dishRatingController from './controllers/dish-rating.controller';
 import * as orderController from './controllers/order.controller';
+import * as userController from './controllers/user.controller';
 
 const router = express.Router();
 
 router.get('/', (req, res) => {
   res.send('Hello, Deliveroo-backend!');
 });
+
+// Sign up
+router.post('/signup', userController.signUp);
+
+// Login
+router.post('/login', userController.login);
 
 // routes to perform CRUD opertions on Resturant table
 router.get('/restaurants', restaurantController.getAllRestaurants);

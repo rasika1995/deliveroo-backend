@@ -1,4 +1,5 @@
 import DishRating from '../models/dish-rating.model';
+import { CUSTOM_ERROR_MESSAGES } from '../types/custom-error-messages';
 import { PaginationOptions } from '../types/pagination-options';
 
 export async function getAllDishRatingsForDish(
@@ -17,7 +18,7 @@ export async function getAllDishRatingsForDish(
     });
   } catch (error) {
     console.error('Error getting dish ratings for dish:', error);
-    throw new Error('Internal server error');
+    throw new Error(CUSTOM_ERROR_MESSAGES.INTERNAL_SERVER_ERROR);
   }
 }
 
@@ -39,7 +40,7 @@ export async function createDishRating(
     return await DishRating.create(dishRatingData);
   } catch (error) {
     console.error('Error creating dish rating:', error);
-    throw new Error('Internal server error');
+    throw new Error(CUSTOM_ERROR_MESSAGES.INTERNAL_SERVER_ERROR);
   }
 }
 
@@ -56,7 +57,7 @@ export async function updateDishRating(
     return null;
   } catch (error) {
     console.error('Error updating dish rating:', error);
-    throw new Error('Internal server error');
+    throw new Error(CUSTOM_ERROR_MESSAGES.INTERNAL_SERVER_ERROR);
   }
 }
 
@@ -68,6 +69,6 @@ export async function deleteDishRating(id: number): Promise<void> {
     }
   } catch (error) {
     console.error('Error deleting dish rating:', error);
-    throw new Error('Internal server error');
+    throw new Error(CUSTOM_ERROR_MESSAGES.INTERNAL_SERVER_ERROR);
   }
 }

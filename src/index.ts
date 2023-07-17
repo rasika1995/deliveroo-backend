@@ -1,9 +1,13 @@
 import express from 'express';
 import sequelize from './db-config/mysql';
 import router from './routes';
+import dotenv from 'dotenv';
+
+// Load environment variables from .env file
+dotenv.config();
 
 const app = express();
-const port = 8080;
+const port = process.env.PORT;
 // Middleware to parse request body as JSON
 app.use(express.json());
 
