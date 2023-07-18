@@ -52,7 +52,7 @@ export async function handleGoogleRedirect(req: Request, res: Response) {
       console.log('refreshToken', refreshToken);
 
       res.redirect(
-        `http://localhost:3000?accessToken=${accessToken}&refreshToken=${refreshToken}`,
+        `http://localhost:3000/sign-up-or-login?accessToken=${accessToken}&refreshToken=${refreshToken}`,
       );
     });
   } catch (error) {
