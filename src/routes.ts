@@ -12,10 +12,13 @@ router.get('/', (req, res) => {
   res.send('Hello, Deliveroo-backend!');
 });
 
-// Sign up
-router.post('/signup', userController.signUp);
+// Routes to handle google authentication in serverSide
+router.post('/createAuthLink', userController.creteAuthLink);
+router.get('/handleGoogleRedirect', userController.handleGoogleRedirect);
+router.post('/getValidToken', userController.getValidToken);
 
-// Login
+// Signup and Login - Get google credential from client side
+router.post('/signup', userController.signUp);
 router.post('/login', userController.login);
 
 // routes to perform CRUD opertions on Resturant table
