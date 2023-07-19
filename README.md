@@ -52,5 +52,5 @@ Open [http://localhost:8080/test-connection](http://localhost:8080/test-connecti
 
 ### Postman API collection
 
-You can find the published Postman API collection [https://documenter.getpostman.com/view/8252342/2s946ibWFs](here)
+You can find the published Postman API collection [here](https://documenter.getpostman.com/view/8252342/2s946ibWFs)
 
