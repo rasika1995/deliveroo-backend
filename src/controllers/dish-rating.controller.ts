@@ -60,14 +60,16 @@ export async function getDishRatingById(req: Request, res: Response) {
 export async function createDishRating(req: Request, res: Response) {
   try {
     // Validate the request body against the schema
+
+    console.log(req)
     const validationErrors = validateRequest(createDishRatingSchema, req.body);
     if (validationErrors) {
-      console.log(validationErrors);
       return sendError(res, 400, JSON.stringify(validationErrors));
     }
     const dishRating = await dishRatingService.createDishRating(req.body);
     sendResponse(res, 201, 'Dish rating created successfully', dishRating);
   } catch (error) {
+    console.log(error)
     console.error('Error creating dish rating:', error);
     sendError(res, 500);
   }
@@ -78,7 +80,6 @@ export async function updateDishRating(req: Request, res: Response) {
     // Validate the request body against the schema
     const validationErrors = validateRequest(updateDishRatingSchema, req.body);
     if (validationErrors) {
-      console.log(validationErrors);
       return sendError(res, 400, JSON.stringify(validationErrors));
     }
     const { id } = req.params;

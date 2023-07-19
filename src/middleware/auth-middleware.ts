@@ -31,6 +31,10 @@ export async function authMiddleware(
     // JWT token verification
     try {
       const decoded = jwt.verify(token, JWT_SECRET_KEY) as any;
+        const now = Date.now() / 1000;
+        if (decoded.exp < now) {
+            return sendError(res, 401, 'Expired JWT token.');
+        }
       // req.user = decoded.user;
       return next();
     } catch (error: any) {

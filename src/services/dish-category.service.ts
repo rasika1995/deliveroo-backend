@@ -10,7 +10,7 @@ export async function getDishCategoriesByResturant(
     const { limit = 10, page = 1 } = options;
     const offset = (page - 1) * limit;
     return await DishCategory.findAndCountAll({
-      where: { restaurantId },
+      where: { restaurant_id: restaurantId },
       attributes: ['id', 'name', 'restaurant_id', 'created_at', 'updated_at'],
       order: [['created_at', 'DESC']],
       limit: Number(limit),
@@ -25,7 +25,7 @@ export async function getDishCategoriesByResturant(
 export async function getDishCategoryById(restaurantId: number, id: number) {
   try {
     return DishCategory.findOne({
-      where: { restaurantId, id },
+      where: { restaurant_id: restaurantId, id },
     });
   } catch (error) {
     console.error('Error fetching dish-category:', error);
@@ -52,7 +52,7 @@ export async function updateDishCategory(
 ) {
   try {
     const dishCategory = await DishCategory.findOne({
-      where: { restaurantId, id },
+      where: { restaurant_id: restaurantId, id },
     });
 
     if (!dishCategory) {
@@ -70,7 +70,7 @@ export async function updateDishCategory(
 export async function deleteDishCategory(restaurantId: number, id: number) {
   try {
     const dishCategory = await DishCategory.findOne({
-      where: { restaurantId, id },
+      where: { restaurant_id: restaurantId, id },
     });
     if (dishCategory) {
       await dishCategory.destroy();
