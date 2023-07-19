@@ -12,6 +12,4 @@ Git
 
 Clone the repo and install the dependencies.
 
-
 ## Clone the repo
-

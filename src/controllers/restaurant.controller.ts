@@ -52,7 +52,6 @@ export async function createRestaurant(req: Request, res: Response) {
   try {
     const validationErrors = validateRequest(createRestaurantSchema, req.body);
     if (validationErrors) {
-      console.log(validationErrors);
       return sendError(res, 400, JSON.stringify(validationErrors));
     }
     const restaurantData = new Restaurant(req.body);
@@ -71,7 +70,6 @@ export async function updateRestaurant(req: Request, res: Response) {
     const { id } = req.params;
     const validationErrors = validateRequest(updateRestaurantSchema, req.body);
     if (validationErrors) {
-      console.log(validationErrors);
       return sendError(res, 400, JSON.stringify(validationErrors));
     }
     const restaurantData = new Restaurant(req.body);

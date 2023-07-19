@@ -15,7 +15,6 @@ export function validateRequest(schema: object, data: any): string[] | null {
   const valid = ajv.validate(schema, data);
   if (!valid) {
     const errors: ErrorObject[] = ajv.errors || [];
-    console.log(errors);
     const errorMessages = errors.map((error) => error.message || '');
     return errorMessages;
   }

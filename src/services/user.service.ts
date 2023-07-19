@@ -7,7 +7,6 @@ export async function createNewUser(userData: Partial<Users>) {
     const newUser = await user.save();
     return newUser;
   } catch (error) {
-    console.log(error);
     throw new Error(`${error}`);
   }
 }

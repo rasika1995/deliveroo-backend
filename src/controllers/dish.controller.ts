@@ -68,7 +68,6 @@ export async function createDish(req: Request, res: Response) {
     // Validate the request body against the schema
     const validationErrors = validateRequest(createDishSchema, req.body);
     if (validationErrors) {
-      console.log(validationErrors);
       return sendError(res, 400, JSON.stringify(validationErrors));
     }
     const dish = await dishService.createDish(req.body);
@@ -84,7 +83,6 @@ export async function updateDish(req: Request, res: Response) {
     // Validate the request body against the schema
     const validationErrors = validateRequest(updateDishSchema, req.body);
     if (validationErrors) {
-      console.log(validationErrors);
       return sendError(res, 400, JSON.stringify(validationErrors));
     }
     const { id } = req.params;

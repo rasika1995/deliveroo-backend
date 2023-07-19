@@ -63,7 +63,6 @@ export async function createDishCategory(req: Request, res: Response) {
     // Validate the request body against the schema
     const validationErrors = validateRequest(dishCategorySchema, req.body);
     if (validationErrors) {
-      console.log(validationErrors);
       return sendError(res, 400, JSON.stringify(validationErrors));
     }
 

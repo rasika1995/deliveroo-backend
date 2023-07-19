@@ -7,10 +7,13 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || 'defaultSecretKey';
 
-export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
+export async function authMiddleware(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   // Check if the request contains a token
   const token = req.headers.authorization;
 
@@ -23,7 +26,7 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
 
   if (authType === 'google') {
     // Google API token verification
-    await verifyGoogleToken(token, req, res, next)
+    await verifyGoogleToken(token, req, res, next);
   } else if (authType === 'jwt') {
     // JWT token verification
     try {
@@ -32,13 +35,13 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
       return next();
     } catch (error: any) {
       if (error.name === 'JsonWebTokenError') {
-        return sendError(res, 401, 'Invalid JWT token.')
+        return sendError(res, 401, 'Invalid JWT token.');
       }
       return sendError(res, 500, CUSTOM_ERROR_MESSAGES.INTERNAL_SERVER_ERROR);
     }
   } else {
-    return sendError(res, 400, 'Invalid Token type')
+    return sendError(res, 400, 'Invalid Token type');
   }
-};
+}
 
 export default authMiddleware;
