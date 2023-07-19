@@ -1,6 +1,6 @@
 # deliveroo-backend
 
-This is a sample backend-project on managing restaurant delivery system
+This is a sample backend project on managing a delivery system for the restaurants.
 
 ## Requirements
 
@@ -33,22 +33,22 @@ Open [http://localhost:8080](http://localhost:8080) and take a look around.
 
 #### Set up the DB connection
 
-Create the new connection in your MySQL Workbench or any other tool you use.
+Create a new connection in your MySQL Workbench or any other tool.
 
 hostname: `127.0.0.1` <br>
 port: `3306` <br>
 username: `root` <br>
 password: `12345678` <br>
 
-It will create new connection for you. <br>
+It will create a new connection for you. <br>
 
 Then you have to import the database schema. <br> 
 
-You can find the relevent <b>.sql</b> in directory: `src/db-config/db.sql` <br>
+You can find the relevent <b>.sql</b> file in directory: `src/db-config/db.sql` <br>
 
-Then create the db schema with name: `deliveroo`
+Then create the DB schema with the name: `deliveroo`
 
-Open [http://localhost:8080/test-connection](http://localhost:8080/test-connection) and test whether you connection was successfully established or not.
+Open [http://localhost:8080/test-connection](http://localhost:8080/test-connection) and test whether your connection was successfully established or not.
 
 ### Postman API collection
 
