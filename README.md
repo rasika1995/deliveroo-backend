@@ -4,7 +4,7 @@ This is a sample backend-project on managing restaurant delivery system
 
 ## Requirements
 
-Node 18
+Node 18 \n
 MySql 8
 Git
 
