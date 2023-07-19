@@ -6,11 +6,24 @@ import * as dishRatingController from './controllers/dish-rating.controller';
 import * as orderController from './controllers/order.controller';
 import * as userController from './controllers/user.controller';
 import authenticationMiddleware from './middleware/auth-middleware';
+import sequelize from './db-config/mysql';
 
 const router = express.Router();
 
 router.get('/', (req, res) => {
   res.send('Hello, Deliveroo-backend!');
+});
+
+
+// Test endpoint for checking MySQL connection
+router.get('/test-connection', async (req, res) => {
+  try {
+    await sequelize.authenticate();
+    res.send('MySQL connection successful');
+  } catch (error) {
+    console.error('Error connecting to MySQL:', error);
+    res.status(500).send('MySQL connection failed');
+  }
 });
 
 // Routes to handle google authentication in serverSide
