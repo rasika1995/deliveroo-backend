@@ -5,6 +5,7 @@ import * as dishController from './controllers/dish.controller';
 import * as dishRatingController from './controllers/dish-rating.controller';
 import * as orderController from './controllers/order.controller';
 import * as userController from './controllers/user.controller';
+import authenticationMiddleware from './middleware/auth-middleware';
 
 const router = express.Router();
 
@@ -17,9 +18,16 @@ router.post('/createAuthLink', userController.creteAuthLink);
 router.get('/handleGoogleRedirect', userController.handleGoogleRedirect);
 router.post('/getValidToken', userController.getValidToken);
 
-// Signup and Login - Get google credential from client side
-router.post('/signup', userController.signUp);
-router.post('/login', userController.login);
+// Normal Signup and Login flow
+router.post('/signUpOrLogin', userController.signUpOrLogin);
+
+// Apply the authentication middleware to protect all the routes below this line
+router.use(authenticationMiddleware);
+
+//Sample protected routes
+router.get('/protected', (req, res) => {
+  res.send('Hello, Protected route!');
+});
 
 // routes to perform CRUD opertions on Resturant table
 router.get('/restaurants', restaurantController.getAllRestaurants);

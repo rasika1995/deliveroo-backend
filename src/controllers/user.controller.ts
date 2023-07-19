@@ -1,17 +1,21 @@
 import { Request, Response } from 'express';
 import * as userService from '../services/user.service';
-import { verifyGoogleToken } from '../common-utils/verify-google-token';
 import { sendError } from '../common-utils/send-error';
 import { sendResponse } from '../common-utils/send-response';
 import { CUSTOM_ERROR_MESSAGES } from '../types/custom-error-messages';
 import { google } from 'googleapis';
 import axios, { AxiosResponse } from 'axios';
+import jwt from 'jsonwebtoken';
 
 import dotenv from 'dotenv';
+import { validateRequest } from '../common-utils/schema-validation';
 
 // Load environment variables from .env file
 dotenv.config();
 
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || 'defaultSecretKey';
+
+// Google Authentication Flow
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
@@ -75,77 +79,57 @@ export async function getValidToken(req: Request, res: Response) {
     const data: any = response.data;
     console.log('data', data.access_token);
 
-    res.json({
-      accessToken: data.access_token,
-    });
+    sendResponse(res, 200, 'Successfully login to the system', {accessToken: data.access_token});
   } catch (error) {
     console.log(error);
     sendError(res, 500, CUSTOM_ERROR_MESSAGES.INTERNAL_SERVER_ERROR);
   }
 }
 
-export async function signUp(req: Request, res: Response) {
-  try {
-    if (req.body.credential) {
-      const verificationResponse = await verifyGoogleToken(req.body.credential);
-      if (verificationResponse.error) {
-        return sendError(res, 400, verificationResponse.error);
+const userSchema = {
+  type: 'object',
+  properties: {
+    email: { type: 'string', format: 'email' },
+    password: { type: 'string', minLength: 8 },
+  },
+  required: ['email', 'password'],
+};
+
+// SignUp and Login Flow
+export async function signUpOrLogin(req: Request, res: Response) {
+    try {
+      const { email, password } = req.body;
+      // Check if the user with the provided email already exists
+      let user = await userService.findUserByEmail(email)
+
+      if (user) {
+        // User already exists, perform login
+        const isPasswordValid = await user.validatePassword(password);
+        if (!isPasswordValid) {
+          return sendError(res, 401, CUSTOM_ERROR_MESSAGES.INVALID_CREDENTIAL);
+        }
+      } else {
+        // Validate the request body against the schema
+      const validationErrors = validateRequest(userSchema, req.body);
+      if (validationErrors) {
+        console.log(validationErrors);
+        return sendError(res, 400, JSON.stringify(validationErrors));
+      }
+        // User does not exist, perform sign-up
+        user = await userService.createNewUser({ email, password });
       }
 
-      const profile = verificationResponse?.payload;
-      if (profile) {
-        const name = `${profile?.name}`;
-        const email = `${profile?.email}`;
-        const user = await userService.findUserByEmail(email);
-        if (user) {
-          return sendResponse(
-            res,
-            200,
-            'User already sign-up to the system',
-            user,
-          );
-        }
-        const cretedUser = await userService.createNewUser(name, email);
-        sendResponse(res, 201, 'Successfully register the user', cretedUser);
-      } else {
-        sendError(res, 400, CUSTOM_ERROR_MESSAGES.CREDENTIAL_INVALID);
-      }
-    } else {
-      sendError(res, 400, CUSTOM_ERROR_MESSAGES.CREDENTIAL_INVALID);
+      // Create a JWT payload
+      const payload = { id: user.id, email: user.email };
+
+      // Generate a JWT token
+      const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: '1h' });
+      return sendResponse(res, 200, 'Successfully login to the system', {token});
+      
+    } catch (error) {
+      console.error('Error in sign-up or login:', error);
+      return res.status(500).json({ error: 'Internal server error.' });
     }
-  } catch (error) {
-    sendError(res, 500, CUSTOM_ERROR_MESSAGES.INTERNAL_SERVER_ERROR);
-  }
 }
 
-export async function login(req: Request, res: Response) {
-  try {
-    if (req.body.credential) {
-      const verificationResponse = await verifyGoogleToken(req.body.credential);
-      if (verificationResponse.error) {
-        return sendError(res, 400, verificationResponse.error);
-      }
 
-      const profile = verificationResponse?.payload;
-      if (profile) {
-        const email = `${profile?.email}`;
-        const user = await userService.findUserByEmail(email);
-        if (user) {
-          return sendResponse(
-            res,
-            200,
-            'Successfully log-in to the system',
-            user,
-          );
-        }
-        sendError(res, 400, 'Please sign-up to the system');
-      } else {
-        sendError(res, 400, CUSTOM_ERROR_MESSAGES.CREDENTIAL_INVALID);
-      }
-    } else {
-      sendError(res, 400, CUSTOM_ERROR_MESSAGES.CREDENTIAL_INVALID);
-    }
-  } catch (error) {
-    sendError(res, 500, CUSTOM_ERROR_MESSAGES.INTERNAL_SERVER_ERROR);
-  }
-}

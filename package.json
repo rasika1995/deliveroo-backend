@@ -13,7 +13,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.13",
+    "@types/jsonwebtoken": "^9.0.2",
     "@types/mysql2": "github:types/mysql2",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "eslint": "^8.45.0",
@@ -31,11 +33,13 @@
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1",
     "axios": "^1.4.0",
+    "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "google-auth-library": "^8.9.0",
     "googleapis": "^122.0.0",
+    "jsonwebtoken": "^9.0.1",
     "mysql2": "^3.5.1",
     "sequelize": "^6.32.1"
   }

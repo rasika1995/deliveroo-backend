@@ -1,9 +1,11 @@
 import Users from '../models/user.model';
 
-export async function createNewUser(name: string, email: string) {
+export async function createNewUser(userData: Partial<Users>) {
   try {
-    const user = await Users.create({ name, email });
-    return user;
+    const user = Users.build(userData);
+    await user.hashPassword(); // Hash the password before saving
+    const newUser = await user.save();
+    return newUser;
   } catch (error) {
     console.log(error);
     throw new Error(`${error}`);
