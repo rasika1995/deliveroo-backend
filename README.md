@@ -50,5 +50,7 @@ Then create the db schema with name: `deliveroo`
 
 Open [http://localhost:8080/test-connection](http://localhost:8080/test-connection) and test whether you connection was successfully established or not.
 
+### Postman API collection
 
+You can find the published Postman API collection [https://documenter.getpostman.com/view/8252342/2s946ibWFs](here)
 
